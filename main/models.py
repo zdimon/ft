@@ -19,6 +19,27 @@ class Fire(models.Model):
     d_people_machine = models.IntegerField(u'Другие организации (машиносмены)', null=True, blank=True)
     d_people_other = models.IntegerField(u'Другие организации (другая техника)', null=True, blank=True)
     type = models.ForeignKey(FireType, null=True, blank=True)
+    def save(self, **kwargs):
+        if self.l_people_day>0 and self.l_people_machine>0:
+            self.type_id = 2
+        if self.l_people_day>0 and self.l_people_machine>0 and self.l_people_other>0:
+            self.type_id = 3
+        if (((self.l_people_day>0 and self.l_people_machine>0) \
+            or (self.l_people_day>0 and self.l_people_machine>0 and self.l_people_other>0))\
+            and ((self.m_people_day>0 and self.m_people_machine>0) or \
+            (self.m_people_day>0 and self.m_people_machine>0 and self.m_people_other>0)))\
+            or (((self.l_people_day>0 and self.l_people_machine>0) \
+            or (self.l_people_day>0 and self.l_people_machine>0 and self.l_people_other>0)) \
+            and ((self.d_people_day>0 and self.d_people_machine>0) or (self.d_people_day>0 and self.d_people_machine>0 and self.d_people_other>0))):
+            self.type_id = 4    
+        if (((self.l_people_day>0 and self.l_people_machine>0) \
+            or (self.l_people_day>0 and self.l_people_machine>0 and self.l_people_other>0))\
+            and ((self.m_people_day>0 and self.m_people_machine>0) or \
+            (self.m_people_day>0 and self.m_people_machine>0 and self.m_people_other>0))\
+            and ((self.d_people_day>0 and self.d_people_machine>0) \
+            or (self.d_people_day>0 and self.d_people_machine>0 and self.d_people_other>0))):
+            self.type_id = 5
+        return super(Fire, self).save(**kwargs)
 
 
 
